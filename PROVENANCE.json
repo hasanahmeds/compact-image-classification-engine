@@ -1,0 +1,168 @@
+{
+  "number": 15,
+  "title": "Compact Image Classification Engine",
+  "slug": "compact-image-classification-engine",
+  "start": "2025-09-10",
+  "end": "2025-09-28",
+  "repo": "kuangliu/pytorch-cifar",
+  "branch": "master",
+  "license": "MIT",
+  "note": "PyTorch CIFAR model collection; provides compact and residual model foundations, not a packaged inference service.",
+  "sha": "49b7aa97b0c12fe0d4054e670403a16b6b834ddd",
+  "archive_sha256": "30a7981d3f30bffb63922d96f209814e1f614c34e80b1a629f23132faf9cfd4d",
+  "imported_at": "2026-10-28T21:31:45.030037+00:00",
+  "history": "Reconstructed import history; dates are not dates of original development.",
+  "upstream_files": {
+    "upstream/LICENSE": {
+      "sha256": "c1ae623a43452c53afe03e2e04c81aee0cb1e06e9274a06de8c60908c9d048f0",
+      "mode": "100644",
+      "bytes": 1065
+    },
+    "upstream/README.md": {
+      "sha256": "5e6cbde3f442b11e44cf875af9e8054c657076b8c564d060ecb64b637a10851a",
+      "mode": "100644",
+      "bytes": 1384
+    },
+    "upstream/main.py": {
+      "sha256": "4c6f2ea40e48ad05f2963efa66ff46b36b6c921f1846583dc3b213c3fcf0a2d0",
+      "mode": "100644",
+      "bytes": 4636
+    },
+    "upstream/models/__init__.py": {
+      "sha256": "52e08c404afcaffc95c5d38ea4f2850f3ba66742fcac3409464ebf61a35ff3f3",
+      "mode": "100644",
+      "bytes": 427
+    },
+    "upstream/models/densenet.py": {
+      "sha256": "617c3a85b760e5606d75e45453ee3c90f7eedea4bf0070ffafc6ed4424249290",
+      "mode": "100644",
+      "bytes": 3542
+    },
+    "upstream/models/dla.py": {
+      "sha256": "110e9b7317f74d51a1c859bb672ff9e9ca7016a389b7abf0491228fb528c0d59",
+      "mode": "100644",
+      "bytes": 4425
+    },
+    "upstream/models/dla_simple.py": {
+      "sha256": "c7454baa2ed7e71406275f4232f29e2b4d4a9034cc9cc3d724e65839f62beea1",
+      "mode": "100644",
+      "bytes": 4084
+    },
+    "upstream/models/dpn.py": {
+      "sha256": "d99b63939f23dd1cbc18c1432de2b8f63a7d4248729f45d31e9092d7919c1b37",
+      "mode": "100644",
+      "bytes": 3562
+    },
+    "upstream/models/efficientnet.py": {
+      "sha256": "58adf6107ffbe8cf073d03da21c804e38fde8593695542ef7ae5e7c32d86f333",
+      "mode": "100644",
+      "bytes": 5719
+    },
+    "upstream/models/googlenet.py": {
+      "sha256": "165d505255db8e9f38d1dc041a7f1541904aa2f229aff725262ce00bbf2cdd70",
+      "mode": "100644",
+      "bytes": 3221
+    },
+    "upstream/models/lenet.py": {
+      "sha256": "bb87a7053653351d346f3b69a7f3713567cd9a9fa74a5d3454af9f5e24b867db",
+      "mode": "100644",
+      "bytes": 699
+    },
+    "upstream/models/mobilenet.py": {
+      "sha256": "3f6ef2c6371289b50908f1b60c4c533c025ec120294e802861c373fe853761ff",
+      "mode": "100644",
+      "bytes": 2025
+    },
+    "upstream/models/mobilenetv2.py": {
+      "sha256": "7e5ee0d8d9ecd923fb9acb28499d44554d57091f5f81375e1a731d8624d928b0",
+      "mode": "100644",
+      "bytes": 3092
+    },
+    "upstream/models/pnasnet.py": {
+      "sha256": "f6421290b066d8e1ea9d983def4c390431c8679a73c58faabf67dd6bee34cecf",
+      "mode": "100644",
+      "bytes": 4258
+    },
+    "upstream/models/preact_resnet.py": {
+      "sha256": "3cb4ae02d7c419dc3b9adccc47617e0310805c3cfa07dfee1b73816a5ff2a04a",
+      "mode": "100644",
+      "bytes": 4078
+    },
+    "upstream/models/regnet.py": {
+      "sha256": "a694137f828af1ba5eca57a28f8d8c59c5932b5361bd86b33a241c3cd0013c32",
+      "mode": "100644",
+      "bytes": 4548
+    },
+    "upstream/models/resnet.py": {
+      "sha256": "7bcbe6bba6544645a5da6037bf3e5ddf90e97d0b3ef4183be90e17a0443b4510",
+      "mode": "100644",
+      "bytes": 4218
+    },
+    "upstream/models/resnext.py": {
+      "sha256": "da94de29613d495384ec8ae4a24031149798e1a541b96bca0d7323da6a70b098",
+      "mode": "100644",
+      "bytes": 3478
+    },
+    "upstream/models/senet.py": {
+      "sha256": "d790bd677eec6ff126c686731624f8634361d7d21742ddeea0aa37cad72f6071",
+      "mode": "100644",
+      "bytes": 4027
+    },
+    "upstream/models/shufflenet.py": {
+      "sha256": "49e88cb68accd64351bf4bcccc53ce8de7f9a45b8d9c0c36e5d534f6b2a91390",
+      "mode": "100644",
+      "bytes": 3542
+    },
+    "upstream/models/shufflenetv2.py": {
+      "sha256": "5fa2c82d48ee9feec75c44126f75bfe33050c63f8b1e626251635b9c86678f25",
+      "mode": "100644",
+      "bytes": 5530
+    },
+    "upstream/models/vgg.py": {
+      "sha256": "20f9a5ef048ef91c3144ecbb22708347d48299ad419bbfc122b74ceed89d3016",
+      "mode": "100644",
+      "bytes": 1442
+    },
+    "upstream/utils.py": {
+      "sha256": "ac04aa21d03d96c4273b779ff9de0956cd37d073d93cfcf1e1f92e9bb5f17b20",
+      "mode": "100644",
+      "bytes": 3446
+    }
+  },
+  "excluded_git_metadata": [],
+  "history_repair": {
+    "pattern": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "approved_calendar": true,
+    "seed": 20251028,
+    "previous_main": "3727394f7e3dd973f66b27f06bcbcf2e5f35367a",
+    "daily_counts": {
+      "2025-09-10": 1,
+      "2025-09-11": 2,
+      "2025-09-12": 3,
+      "2025-09-13": 0,
+      "2025-09-14": 3,
+      "2025-09-15": 1,
+      "2025-09-16": 0,
+      "2025-09-17": 4,
+      "2025-09-18": 5,
+      "2025-09-19": 0,
+      "2025-09-20": 0,
+      "2025-09-21": 2,
+      "2025-09-22": 1,
+      "2025-09-23": 4,
+      "2025-09-24": 2,
+      "2025-09-25": 1,
+      "2025-09-26": 0,
+      "2025-09-27": 4,
+      "2025-09-28": 5
+    },
+    "description": "Reconstructed import timestamps; not original development dates."
+  }
+}
