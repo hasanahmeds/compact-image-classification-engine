@@ -118,3 +118,7 @@ def format_time(seconds):
         i += 1
     if millis > 0 and i <= 2:
         f += str(millis) + 'ms'
+        i += 1
+    if f == '':
+        f = '0ms'
+    return f
