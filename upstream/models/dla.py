@@ -118,3 +118,18 @@ class DLA(nn.Module):
         out = self.layer5(out)
         out = self.layer6(out)
         out = F.avg_pool2d(out, 4)
+        out = out.view(out.size(0), -1)
+        out = self.linear(out)
+        return out
+
+
+def test():
+    net = DLA()
+    print(net)
+    x = torch.randn(1, 3, 32, 32)
+    y = net(x)
+    print(y.size())
+
+
+if __name__ == '__main__':
+    test()
