@@ -78,3 +78,51 @@ class Tree(nn.Module):
 class SimpleDLA(nn.Module):
     def __init__(self, block=BasicBlock, num_classes=10):
         super(SimpleDLA, self).__init__()
+        self.base = nn.Sequential(
+            nn.Conv2d(3, 16, kernel_size=3, stride=1, padding=1, bias=False),
+            nn.BatchNorm2d(16),
+            nn.ReLU(True)
+        )
+
+        self.layer1 = nn.Sequential(
+            nn.Conv2d(16, 16, kernel_size=3, stride=1, padding=1, bias=False),
+            nn.BatchNorm2d(16),
+            nn.ReLU(True)
+        )
+
+        self.layer2 = nn.Sequential(
+            nn.Conv2d(16, 32, kernel_size=3, stride=1, padding=1, bias=False),
+            nn.BatchNorm2d(32),
+            nn.ReLU(True)
+        )
+
+        self.layer3 = Tree(block,  32,  64, level=1, stride=1)
+        self.layer4 = Tree(block,  64, 128, level=2, stride=2)
+        self.layer5 = Tree(block, 128, 256, level=2, stride=2)
+        self.layer6 = Tree(block, 256, 512, level=1, stride=2)
+        self.linear = nn.Linear(512, num_classes)
+
+    def forward(self, x):
+        out = self.base(x)
+        out = self.layer1(out)
+        out = self.layer2(out)
+        out = self.layer3(out)
+        out = self.layer4(out)
+        out = self.layer5(out)
+        out = self.layer6(out)
+        out = F.avg_pool2d(out, 4)
+        out = out.view(out.size(0), -1)
+        out = self.linear(out)
+        return out
+
+
+def test():
+    net = SimpleDLA()
+    print(net)
+    x = torch.randn(1, 3, 32, 32)
+    y = net(x)
+    print(y.size())
+
+
+if __name__ == '__main__':
+    test()
