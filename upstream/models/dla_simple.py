@@ -38,3 +38,43 @@ class BasicBlock(nn.Module):
         out = self.bn2(self.conv2(out))
         out += self.shortcut(x)
         out = F.relu(out)
+        return out
+
+
+class Root(nn.Module):
+    def __init__(self, in_channels, out_channels, kernel_size=1):
+        super(Root, self).__init__()
+        self.conv = nn.Conv2d(
+            in_channels, out_channels, kernel_size,
+            stride=1, padding=(kernel_size - 1) // 2, bias=False)
+        self.bn = nn.BatchNorm2d(out_channels)
+
+    def forward(self, xs):
+        x = torch.cat(xs, 1)
+        out = F.relu(self.bn(self.conv(x)))
+        return out
+
+
+class Tree(nn.Module):
+    def __init__(self, block, in_channels, out_channels, level=1, stride=1):
+        super(Tree, self).__init__()
+        self.root = Root(2*out_channels, out_channels)
+        if level == 1:
+            self.left_tree = block(in_channels, out_channels, stride=stride)
+            self.right_tree = block(out_channels, out_channels, stride=1)
+        else:
+            self.left_tree = Tree(block, in_channels,
+                                  out_channels, level=level-1, stride=stride)
+            self.right_tree = Tree(block, out_channels,
+                                   out_channels, level=level-1, stride=1)
+
+    def forward(self, x):
+        out1 = self.left_tree(x)
+        out2 = self.right_tree(out1)
+        out = self.root([out1, out2])
+        return out
+
+
+class SimpleDLA(nn.Module):
+    def __init__(self, block=BasicBlock, num_classes=10):
+        super(SimpleDLA, self).__init__()
