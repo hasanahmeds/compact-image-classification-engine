@@ -38,3 +38,83 @@ class SE(nn.Module):
         out = self.se2(out).sigmoid()
         out = x * out
         return out
+
+
+class Block(nn.Module):
+    '''expansion + depthwise + pointwise + squeeze-excitation'''
+
+    def __init__(self,
+                 in_channels,
+                 out_channels,
+                 kernel_size,
+                 stride,
+                 expand_ratio=1,
+                 se_ratio=0.,
+                 drop_rate=0.):
+        super(Block, self).__init__()
+        self.stride = stride
+        self.drop_rate = drop_rate
+        self.expand_ratio = expand_ratio
+
+        # Expansion
+        channels = expand_ratio * in_channels
+        self.conv1 = nn.Conv2d(in_channels,
+                               channels,
+                               kernel_size=1,
+                               stride=1,
+                               padding=0,
+                               bias=False)
+        self.bn1 = nn.BatchNorm2d(channels)
+
+        # Depthwise conv
+        self.conv2 = nn.Conv2d(channels,
+                               channels,
+                               kernel_size=kernel_size,
+                               stride=stride,
+                               padding=(1 if kernel_size == 3 else 2),
+                               groups=channels,
+                               bias=False)
+        self.bn2 = nn.BatchNorm2d(channels)
+
+        # SE layers
+        se_channels = int(in_channels * se_ratio)
+        self.se = SE(channels, se_channels)
+
+        # Output
+        self.conv3 = nn.Conv2d(channels,
+                               out_channels,
+                               kernel_size=1,
+                               stride=1,
+                               padding=0,
+                               bias=False)
+        self.bn3 = nn.BatchNorm2d(out_channels)
+
+        # Skip connection if in and out shapes are the same (MV-V2 style)
+        self.has_skip = (stride == 1) and (in_channels == out_channels)
+
+    def forward(self, x):
+        out = x if self.expand_ratio == 1 else swish(self.bn1(self.conv1(x)))
+        out = swish(self.bn2(self.conv2(out)))
+        out = self.se(out)
+        out = self.bn3(self.conv3(out))
+        if self.has_skip:
+            if self.training and self.drop_rate > 0:
+                out = drop_connect(out, self.drop_rate)
+            out = out + x
+        return out
+
+
+class EfficientNet(nn.Module):
+    def __init__(self, cfg, num_classes=10):
+        super(EfficientNet, self).__init__()
+        self.cfg = cfg
+        self.conv1 = nn.Conv2d(3,
+                               32,
+                               kernel_size=3,
+                               stride=1,
+                               padding=1,
+                               bias=False)
+        self.bn1 = nn.BatchNorm2d(32)
+        self.layers = self._make_layers(in_channels=32)
+        self.linear = nn.Linear(cfg['out_channels'][-1], num_classes)
+
