@@ -78,3 +78,48 @@ class PNASNet(nn.Module):
         self.bn1 = nn.BatchNorm2d(num_planes)
 
         self.layer1 = self._make_layer(num_planes, num_cells=6)
+        self.layer2 = self._downsample(num_planes*2)
+        self.layer3 = self._make_layer(num_planes*2, num_cells=6)
+        self.layer4 = self._downsample(num_planes*4)
+        self.layer5 = self._make_layer(num_planes*4, num_cells=6)
+
+        self.linear = nn.Linear(num_planes*4, 10)
+
+    def _make_layer(self, planes, num_cells):
+        layers = []
+        for _ in range(num_cells):
+            layers.append(self.cell_type(self.in_planes, planes, stride=1))
+            self.in_planes = planes
+        return nn.Sequential(*layers)
+
+    def _downsample(self, planes):
+        layer = self.cell_type(self.in_planes, planes, stride=2)
+        self.in_planes = planes
+        return layer
+
+    def forward(self, x):
+        out = F.relu(self.bn1(self.conv1(x)))
+        out = self.layer1(out)
+        out = self.layer2(out)
+        out = self.layer3(out)
+        out = self.layer4(out)
+        out = self.layer5(out)
+        out = F.avg_pool2d(out, 8)
+        out = self.linear(out.view(out.size(0), -1))
+        return out
+
+
+def PNASNetA():
+    return PNASNet(CellA, num_cells=6, num_planes=44)
+
+def PNASNetB():
+    return PNASNet(CellB, num_cells=6, num_planes=32)
+
+
+def test():
+    net = PNASNetB()
+    x = torch.randn(1,3,32,32)
+    y = net(x)
+    print(y)
+
+# test()
