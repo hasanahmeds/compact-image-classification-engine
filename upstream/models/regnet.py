@@ -118,3 +118,38 @@ def RegNetX_200MF():
     }
     return RegNet(cfg)
 
+
+def RegNetX_400MF():
+    cfg = {
+        'depths': [1, 2, 7, 12],
+        'widths': [32, 64, 160, 384],
+        'strides': [1, 1, 2, 2],
+        'group_width': 16,
+        'bottleneck_ratio': 1,
+        'se_ratio': 0,
+    }
+    return RegNet(cfg)
+
+
+def RegNetY_400MF():
+    cfg = {
+        'depths': [1, 2, 7, 12],
+        'widths': [32, 64, 160, 384],
+        'strides': [1, 1, 2, 2],
+        'group_width': 16,
+        'bottleneck_ratio': 1,
+        'se_ratio': 0.25,
+    }
+    return RegNet(cfg)
+
+
+def test():
+    net = RegNetX_200MF()
+    print(net)
+    x = torch.randn(2, 3, 32, 32)
+    y = net(x)
+    print(y.shape)
+
+
+if __name__ == '__main__':
+    test()
