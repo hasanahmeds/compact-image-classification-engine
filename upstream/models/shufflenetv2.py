@@ -78,3 +78,83 @@ class DownBlock(nn.Module):
         self.bn5 = nn.BatchNorm2d(mid_channels)
 
         self.shuffle = ShuffleBlock()
+
+    def forward(self, x):
+        # left
+        out1 = self.bn1(self.conv1(x))
+        out1 = F.relu(self.bn2(self.conv2(out1)))
+        # right
+        out2 = F.relu(self.bn3(self.conv3(x)))
+        out2 = self.bn4(self.conv4(out2))
+        out2 = F.relu(self.bn5(self.conv5(out2)))
+        # concat
+        out = torch.cat([out1, out2], 1)
+        out = self.shuffle(out)
+        return out
+
+
+class ShuffleNetV2(nn.Module):
+    def __init__(self, net_size):
+        super(ShuffleNetV2, self).__init__()
+        out_channels = configs[net_size]['out_channels']
+        num_blocks = configs[net_size]['num_blocks']
+
+        self.conv1 = nn.Conv2d(3, 24, kernel_size=3,
+                               stride=1, padding=1, bias=False)
+        self.bn1 = nn.BatchNorm2d(24)
+        self.in_channels = 24
+        self.layer1 = self._make_layer(out_channels[0], num_blocks[0])
+        self.layer2 = self._make_layer(out_channels[1], num_blocks[1])
+        self.layer3 = self._make_layer(out_channels[2], num_blocks[2])
+        self.conv2 = nn.Conv2d(out_channels[2], out_channels[3],
+                               kernel_size=1, stride=1, padding=0, bias=False)
+        self.bn2 = nn.BatchNorm2d(out_channels[3])
+        self.linear = nn.Linear(out_channels[3], 10)
+
+    def _make_layer(self, out_channels, num_blocks):
+        layers = [DownBlock(self.in_channels, out_channels)]
+        for i in range(num_blocks):
+            layers.append(BasicBlock(out_channels))
+            self.in_channels = out_channels
+        return nn.Sequential(*layers)
+
+    def forward(self, x):
+        out = F.relu(self.bn1(self.conv1(x)))
+        # out = F.max_pool2d(out, 3, stride=2, padding=1)
+        out = self.layer1(out)
+        out = self.layer2(out)
+        out = self.layer3(out)
+        out = F.relu(self.bn2(self.conv2(out)))
+        out = F.avg_pool2d(out, 4)
+        out = out.view(out.size(0), -1)
+        out = self.linear(out)
+        return out
+
+
+configs = {
+    0.5: {
+        'out_channels': (48, 96, 192, 1024),
+        'num_blocks': (3, 7, 3)
+    },
+
+    1: {
+        'out_channels': (116, 232, 464, 1024),
+        'num_blocks': (3, 7, 3)
+    },
+    1.5: {
+        'out_channels': (176, 352, 704, 1024),
+        'num_blocks': (3, 7, 3)
+    },
+    2: {
+        'out_channels': (224, 488, 976, 2048),
+        'num_blocks': (3, 7, 3)
+    }
+}
+
+
+def test():
+    net = ShuffleNetV2(net_size=0.5)
+    x = torch.randn(3, 3, 32, 32)
+    y = net(x)
+    print(y.shape)
+
